@@ -79,11 +79,36 @@ library(car)
 subsets(regsubsets.out,statistic="adjr2",legend="bottomright",main="Adjusted R^2")
 ```
 
-### For the Bream Model the best regressor is Height and then L2-Height.
+### For the Bream Model the best regressor is Height and then L2-Height.So we can see the adjusted R-squared is 0.9356 for Length 2-height.
 
+```{r}
+MODL1 <- lm(Weight~Lenght2+Height,data=BreamData)
+summary.lm(MODL1)
+```
 
 ## Smelt Model
 
+```{r}
+# read in the fish data 
+fishdata <- read.csv(file="Fish.csv", header=TRUE)
+SmeltData <- filter(fishdata,Species=="Smelt") %>% select(-Species)
+```
+
+```{r}
+library(leaps)
+regsubsets.out <-
+    regsubsets(Weight ~ .,
+               data = SmeltData,
+               nbest = 1,     # 1 best model for each number of predictors
+               nvmax = NULL,  # NULL for no limit on number of variables
+               force.in = NULL, force.out = NULL,
+               method = "exhaustive")
+
+summary.out <- summary(regsubsets.out)
+as.data.frame(summary.out$outmat)
+library(car)
+subsets(regsubsets.out,statistic="adjr2",legend="bottomright",main="Adjusted R^2")
+```
 
 # Discussion and Final Conclusion
 
