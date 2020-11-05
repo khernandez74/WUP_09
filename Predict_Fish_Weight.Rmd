@@ -52,10 +52,34 @@ subsets(regsubsets.out,statistic="adjr2",legend="bottomright",main="Adjusted R^2
 
 ### The best two regressor model for Perch is Height and Width. This is also the best overall model as measured by adjusted R - squared.
 
+
 #Bream Model
 
 <!--Divide this section into two sub-sections:  One for your descriptive  results and one for your inferential results.!-->
 
+```{r}
+# read in the fish data 
+fishdata <- read.csv(file="Fish.csv", header=TRUE)
+BreamData <- filter(fishdata,Species=="Bream") %>% select(-Species)
+```
+
+```{r}
+library(leaps)
+regsubsets.out <-
+    regsubsets(Weight ~ .,
+               data = BreamData,
+               nbest = 1,     # 1 best model for each number of predictors
+               nvmax = NULL,  # NULL for no limit on number of variables
+               force.in = NULL, force.out = NULL,
+               method = "exhaustive")
+
+summary.out <- summary(regsubsets.out)
+as.data.frame(summary.out$outmat)
+library(car)
+subsets(regsubsets.out,statistic="adjr2",legend="bottomright",main="Adjusted R^2")
+```
+
+### For the Bream Model the best regressor is Height and then L2-Height.
 
 
 ## Smelt Model
